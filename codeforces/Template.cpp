@@ -71,6 +71,8 @@ const int MAX = 15 + 7;
 
 int sol(){
 
+
+
 }
 
 int main(){
