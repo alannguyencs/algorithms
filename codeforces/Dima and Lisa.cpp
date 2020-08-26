@@ -62,19 +62,83 @@ const int MX = 1e5 + 7;
 const int MAX = 15 + 7;
 
 // paste source code========================================================
+ll prime_arr[MX]; int max_prime = 5e4;
+bool is_prime[MX];
+ll prime_dual_sum_arr[MX];
+bool is_dual_sum[MX];
 
+void setPrimeArray(){
+    int cnt = 1;
+    is_prime[1] = false;
+    For(i,2,max_prime) is_prime[i] = true;
+    For(i,2,max_prime){
+        if(is_prime[i]){
+            prime_arr[cnt] = i; cnt ++;
+            for(int j = 2 * i; j <= max_prime; j += i)
+                is_prime[j] = false;
+        }
+    }
+
+    int cnt_pp = 1, dual_sum;
+    For(i,0,cnt){
+        For(j,1,cnt){
+            dual_sum = prime_arr[i] + prime_arr[j];
+            if (!is_dual_sum[dual_sum]){
+                prime_dual_sum_arr[cnt_pp++] = dual_sum;
+                is_dual_sum[dual_sum] = true;
+            }
+        }
+    }
+}
+
+bool isPrime(ll n){
+    if(n < 2) return false;
+    if(n < 4) return true;
+    int m = sqrt(n);
+    if(n % 2 == 0) return false;
+    if(n % 3 == 0) return false;
+    if(n >= 25){
+        for(int i = 5; i<= m; i+=2){
+            if(n % i == 0) return false;
+        }
+    }
+    return true;
+}
 
 // declare ========================================================
-
+ll n, k;
 
 // create function========================================================
 
 int sol(){
+    setPrimeArray();
+    cin >> n;
 
+    if(isPrime(n)){
+        cout << 1 << el << n << el;
+        return 1;
+    }
+
+    For(cnt_pp_, 1, max_prime*2){
+        k = prime_dual_sum_arr[cnt_pp_];
+
+        if(isPrime(n-k)){
+            if(isPrime(k)){
+                cout << 2 << el << k << " " << n - k << el;
+                return 1;
+            }
+            For(j,0,k){
+                if(isPrime(j) && isPrime(k - j)){
+                    cout << 3 << el << j << " " << k - j << " " << n - k << el;
+                    return 1;
+                }
+            }
+        }
+    }
 
 
 }
-
+//http://codeforces.com/problemset/problem/584/D
 int main(){
 
 	#ifndef ONLINE_JUDGE

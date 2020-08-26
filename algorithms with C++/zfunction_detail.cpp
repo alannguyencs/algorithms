@@ -62,15 +62,53 @@ const int MX = 1e5 + 7;
 const int MAX = 15 + 7;
 
 // paste source code========================================================
-
+// z-function implementation taken from e-maxx.ru   O(n)
+/*
+Suppose we are given a string s of length n. The Z-function for this string is an array of length n where the i-th element is equal to the greatest number of characters starting from the position i that coincide with the first characters of s.
+In other words, z[i] is the length of the longest common prefix between s and the suffix of s starting at i.
+*/
+//http://codeforces.com/contest/126/problem/B
 
 // declare ========================================================
-
-
+string s;
+int n;
+int z[MX];
 // create function========================================================
+//INPUT
+//abdabxxabdababdxxababd
 
 int sol(){
+    //initialize array, vector, .........................
+    cin >> s;
+    n = sz(s);
+    int L = 0, R = 0;
+    For(i,1,n){
+        if(i > R){
+            L = R = i;
+            while(R < n && s[R - L] == s[R]) R++;
+            z[i] = R - L;
+            R --;
+        }else{
+            int k = i - L;
+            if(z[k] < R - i + 1) {
+                z[i] = z[k];
+            }
+            else{
+                //vong lap character moi
+                L = i;
+                while(R < n && s[R - L] == s[R]) R++;
+                z[i] = R - L;
+                R--;
+            }
+        }
+        cout << i << " " << L << " " << R << el;
+    }
 
+    disp(z, n);
+
+   //solve...............................................
+
+    //display result......................................
 
 
 }
@@ -79,11 +117,12 @@ int main(){
 
 	#ifndef ONLINE_JUDGE
 	freopen("in.txt", "r", stdin);
-//	freopen("out.txt", "w", stdout);
+	freopen("out.txt", "w", stdout);
 
 	#endif
 	std::ios::sync_with_stdio(false);
 	cin.tie(NULL);
+
 
     sol();
 

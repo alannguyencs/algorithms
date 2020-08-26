@@ -63,15 +63,46 @@ const int MAX = 15 + 7;
 
 // paste source code========================================================
 
-
+//p[r] = cumulative sum to r
+// pair (l, r) is correct if p[r] - p[l-1] == r - (l-1)
+//                           q[r] = q[l-1]
 // declare ========================================================
+
+int t, n, num;
+ll ans;
+int a[MX], p[MX], q[MX];
+string s;
+map<int,ll> m;
+map<int,ll>::iterator it;
 
 
 // create function========================================================
+void test(){
+    m.clear();
+    ans = 0ll;
+    cin >> n >> s;
+    For(i,1,n) a[i] = s[i-1] - '0';
 
-int sol(){
+    For(i,1,n) {
+        p[i] = p[i-1] + a[i];
+        q[i] = p[i] - i;
+    }
+//    disp(p, n);
+    For(i,0,n){
+        if (m.find(q[i]) == m.end()) m[q[i]] = 1;
+        else m[q[i]] += 1;
+    }
+
+    for(it = m.begin(); it != m.end(); ++it){
+        ans += (it->second) * (it->second - 1) / 2;
+    }
+    cout << ans << el;
 
 
+}
+void sol(){
+    cin >> t;
+    For(i,1,t) test();
 
 }
 

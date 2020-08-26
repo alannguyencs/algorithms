@@ -1,4 +1,5 @@
 #include <bits/stdc++.h>
+
 using namespace std;
 
 typedef long long ll;
@@ -9,6 +10,7 @@ typedef pair<int, int> ii;
 typedef vector<ii> vii;
 typedef vector<int> vi;
 typedef vector<vi> vvi;
+typedef vector<bool> vb;
 typedef vector<double> vd;
 typedef vector<string> vs;
 
@@ -48,7 +50,7 @@ template<class T> T cube(T x) { return x * x * x; }
 template<class T> int getbit(T s, int i) { return (s >> i) & 1; }
 template<class T> T onbit(T s, int i) { return s | (T(1) << i); }
 template<class T> T offbit(T s, int i) { return s & (~(T(1) << i)); }
-template<class T> int cntbit(T s) { return s == 0 ? 0 : cntbit(s >> 1) + (s & 1); } //number of bit 1
+template<class T> int cntbit(T s) { return s == 0 ? 0 : cntbit(s >> 1) + (s & 1); }
 template<class T> int disp(T s) { Rep(i,sz(s)) cout << s[i] << " "; cout << el; }
 template<class T> int disp(T s,int n) { For(i,1,n) cout << s[i] << " "; cout << el; }
 const ld PI = acos(-1.0);
@@ -58,34 +60,90 @@ const int dc[] = {0, +1, 0, -1};
 const int inf = (int)1e9 + 5;
 const ll linf = (ll)1e16 + 5;
 const ll mod = (ll)1e9 + 7;
-const int MX = 1e5 + 7;
-const int MAX = 15 + 7;
+const int MX = 1e6 + 7;
 
 // paste source code========================================================
 
-
 // declare ========================================================
-
-
+ll a[10][4], f[10];
+int index[10];
+bool done;
 // create function========================================================
-
-int sol(){
-
-
-
+ll dist2(ll aa[], ll bb[] ){ //tinh binh phuong khoang cach
+    ll ans = 0ll;
+    For(i,1,3) ans += (aa[i] - bb[i]) * (aa[i] - bb[i]);
+    return ans;
+}
+bool is90(ll aa[], ll bb[], ll cc[]){ //kiem tra vuong goc
+    ll ans = 0ll;
+    For(i,1,3) ans += (cc[i] - aa[i]) * (bb[i] - aa[i]);
+    return (ans == 0);
+}
+bool cmp(int id, int it){
+    return f[id] < f[it];
+}
+bool isExist(ll xa, ll ya, ll za){ //kiem tra toa do nay co nam trong array ko
+    For(i,1,8){
+        if(xa == a[i][1] && ya == a[i][2] && za == a[i][3]) return true;
+    }
+    return false;
+}
+bool isCube(){
+    For(i,2,8) f[i] = dist2(a[1], a[i]);
+    sort(index + 1, index + 9, cmp); //sort theo cai nao gan vs a[1] nhat
+    if(f[index[2]] == 0) return false;
+    if(f[index[2]] != f[index[3]]) return false; //khoang cach tu 2, 3, 4 den 1 bang nhau
+    if(f[index[3]] != f[index[4]]) return false;
+    if(!is90(a[1], a[index[2]], a[index[3]])) return false; //2, 3, 4 doi mot vuong goc
+    if(!is90(a[1], a[index[2]], a[index[4]])) return false;
+    if(!is90(a[1], a[index[4]], a[index[3]])) return false;
+    ll x[4];
+    For(i,1,3) x[i] = - a[1][i] + a[index[2]][i] + a[index[3]][i]; //kiem tra 5, 6, 7, 8
+    if(!isExist(x[1], x[2], x[3])) return false;
+    For(i,1,3) x[i] = - a[1][i] + a[index[2]][i] + a[index[4]][i];
+    if(!isExist(x[1], x[2], x[3])) return false;
+    For(i,1,3) x[i] = - a[1][i] + a[index[4]][i] + a[index[3]][i];
+    if(!isExist(x[1], x[2], x[3])) return false;
+    For(i,1,3) x[i] = - 2 * a[1][i] + a[index[2]][i] + a[index[3]][i] + a[index[4]][i];
+    if(!isExist(x[1], x[2], x[3])) return false;
+    return true;
+}
+void dfs(int k){
+    if(k == 9){
+        if(isCube() && !done){
+            cout << "YES" << el;
+            For(i,1,8) disp(a[i], 3);
+            done = true;
+        }
+    }else{
+        do{
+            dfs(k + 1);
+        }while(next_permutation(a[k] + 1, a[k] + 4));
+    }
 }
 
-int main(){
+int sol(){
+    //initialize array, vector, .........................
+    For(i,1,8) For(j,1,3) cin >> a[i][j];
+    For(i,1,8) index[i] = i;
+    //solve...............................................
+    For(i,1,8) sort(a[i] + 1, a[i] + 4);
+    done = false;
+    dfs(2);
+    //display result......................................
+    if(!done) cout << "NO" << el;
 
+}
+int sltest = 1;
+int main(){
+	int xtest = 1;
 	#ifndef ONLINE_JUDGE
 	freopen("in.txt", "r", stdin);
-//	freopen("out.txt", "w", stdout);
-
+	freopen("out.txt", "w", stdout);
+	xtest = sltest;
 	#endif
 	std::ios::sync_with_stdio(false);
 	cin.tie(NULL);
-
-    sol();
-
+    while(xtest--)  sol();
     return 0;
 }

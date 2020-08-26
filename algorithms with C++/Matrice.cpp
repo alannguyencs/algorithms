@@ -48,7 +48,7 @@ template<class T> T cube(T x) { return x * x * x; }
 template<class T> int getbit(T s, int i) { return (s >> i) & 1; }
 template<class T> T onbit(T s, int i) { return s | (T(1) << i); }
 template<class T> T offbit(T s, int i) { return s & (~(T(1) << i)); }
-template<class T> int cntbit(T s) { return s == 0 ? 0 : cntbit(s >> 1) + (s & 1); } //number of bit 1
+template<class T> int cntbit(T s) { return s == 0 ? 0 : cntbit(s >> 1) + (s & 1); }
 template<class T> int disp(T s) { Rep(i,sz(s)) cout << s[i] << " "; cout << el; }
 template<class T> int disp(T s,int n) { For(i,1,n) cout << s[i] << " "; cout << el; }
 const ld PI = acos(-1.0);
@@ -62,15 +62,38 @@ const int MX = 1e5 + 7;
 const int MAX = 15 + 7;
 
 // paste source code========================================================
-
+const int M = 110;
+const int N = 101;
+struct Matrix{
+    int row, col;
+    int s[M][M];
+    Matrix(){ms(s, 0);}
+};
+Matrix operator * (Matrix A, Matrix B){
+    Matrix ans; ans.row = A.row; ans.col = B.col;
+    For(i,1,ans.row) For(j,1,ans.col) For(k,1,A.col)
+        ans.s[i][j] = (ans.s[i][j] + 1ll * A.s[i][k] * B.s[k][j] % mod) % mod;
+    return ans;
+}
+Matrix Pow(Matrix A, ll k){
+    Matrix ans = A; k--;
+    while(k > 0){if(k&1) ans = ans * A; A = A*A; k /= 2;} //bit
+    return ans;
+}
 
 // declare ========================================================
 
 
 // create function========================================================
 
-int sol(){
 
+int sol(){
+    //initialize array, vector, .........................
+
+   //solve...............................................
+
+
+    //display result......................................
 
 
 }
@@ -79,11 +102,12 @@ int main(){
 
 	#ifndef ONLINE_JUDGE
 	freopen("in.txt", "r", stdin);
-//	freopen("out.txt", "w", stdout);
+	freopen("out.txt", "w", stdout);
 
 	#endif
 	std::ios::sync_with_stdio(false);
 	cin.tie(NULL);
+
 
     sol();
 

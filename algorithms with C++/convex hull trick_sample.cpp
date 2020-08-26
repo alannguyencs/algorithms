@@ -1,4 +1,5 @@
 #include <bits/stdc++.h>
+
 using namespace std;
 
 typedef long long ll;
@@ -9,6 +10,7 @@ typedef pair<int, int> ii;
 typedef vector<ii> vii;
 typedef vector<int> vi;
 typedef vector<vi> vvi;
+typedef vector<bool> vb;
 typedef vector<double> vd;
 typedef vector<string> vs;
 
@@ -48,7 +50,7 @@ template<class T> T cube(T x) { return x * x * x; }
 template<class T> int getbit(T s, int i) { return (s >> i) & 1; }
 template<class T> T onbit(T s, int i) { return s | (T(1) << i); }
 template<class T> T offbit(T s, int i) { return s & (~(T(1) << i)); }
-template<class T> int cntbit(T s) { return s == 0 ? 0 : cntbit(s >> 1) + (s & 1); } //number of bit 1
+template<class T> int cntbit(T s) { return s == 0 ? 0 : cntbit(s >> 1) + (s & 1); }
 template<class T> int disp(T s) { Rep(i,sz(s)) cout << s[i] << " "; cout << el; }
 template<class T> int disp(T s,int n) { For(i,1,n) cout << s[i] << " "; cout << el; }
 const ld PI = acos(-1.0);
@@ -58,34 +60,59 @@ const int dc[] = {0, +1, 0, -1};
 const int inf = (int)1e9 + 5;
 const ll linf = (ll)1e16 + 5;
 const ll mod = (ll)1e9 + 7;
-const int MX = 1e5 + 7;
-const int MAX = 15 + 7;
+const int MX = 1e6 + 7;
 
 // paste source code========================================================
-
-
+#define F(x) dp[x]+b[x]*a[i]
+#define G(x,y) (dp[y]-dp[x])/(0.+b[x]-b[y])
 // declare ========================================================
-
+ll a[MX], b[MX], dp[MX];
+int n, h, t, q[MX];
 
 // create function========================================================
+/*
+Note 1: cach dung convex hull trick nhu template dan den sai so, tam thoi chua biet xu ly ra sao
+Note 2: q[i] ban chat la update danh sach nhung duong thang dang dc ve tren ban do
+trong do, q[l] la vi tri thick hop de tinh gia tri cua dp[i]
+            q[r] la duong thang ngoai cung ben phai
+Note 3: condition a1 < a2 < a3 < a4....
+                  b1 > b2 > b3 > b4....
+                  dp[i] = min(dp[j] + b[j] * a[i]) , j: 1 -> i - 1
+
+*/
 
 int sol(){
+    //initialize array, vector, .........................
+    cin >> n;
+    For(i,1,n) cin >> a[i];
+    For(i,1,n) cin >> b[i];
+    //solve...............................................
+    int r = 0, l = 1;
+    For(i,1,n){
+        //update duong thang tu trai sang phai de tinh dp[i]
+        while(l < r && F(q[l]) >= F(q[l + 1])) l++;
+        // tinh gia tri dp[i]
+        dp[i] = dp[q[l]] + b[q[l]] * a[i];
+        //cho dp[i] vao danh sach cac duong thang dang co, loai bo nhung duong thang ko can thiet
+        while(l < r && G(i, q[r]) <= G(q[r], q[r - 1])) r--;
+        q[++r] = i;
 
+    }
 
+    //display result......................................
+    cout << dp[n] << el;
 
 }
-
+int sltest = 1;
 int main(){
-
+	int xtest = 1;
 	#ifndef ONLINE_JUDGE
 	freopen("in.txt", "r", stdin);
-//	freopen("out.txt", "w", stdout);
-
+	freopen("out.txt", "w", stdout);
+	xtest = sltest;
 	#endif
 	std::ios::sync_with_stdio(false);
 	cin.tie(NULL);
-
-    sol();
-
+    while(xtest--)  sol();
     return 0;
 }

@@ -1,4 +1,5 @@
 #include <bits/stdc++.h>
+
 using namespace std;
 
 typedef long long ll;
@@ -9,6 +10,7 @@ typedef pair<int, int> ii;
 typedef vector<ii> vii;
 typedef vector<int> vi;
 typedef vector<vi> vvi;
+
 typedef vector<double> vd;
 typedef vector<string> vs;
 
@@ -38,7 +40,6 @@ typedef vector<string> vs;
 #define Enum(a) Fit(it, (a)) cout << *it << " "; cout << endl;
 #define el '\n'
 #define coud(a,b) cout<<fixed << setprecision((b)) << (a)
-#define debug(x) { cout << #x << " = "; cout << (x) << endl; }
 
 template<class F, class T> T convert(F a, int p = -1) { stringstream ss; if (p >= 0) ss << fixed << setprecision(p); ss << a; T r; ss >> r; return r; }
 template<class T> T gcd(T a, T b){ T r; while (b != 0) { r = a % b; a = b; b = r; } return a;}
@@ -48,9 +49,8 @@ template<class T> T cube(T x) { return x * x * x; }
 template<class T> int getbit(T s, int i) { return (s >> i) & 1; }
 template<class T> T onbit(T s, int i) { return s | (T(1) << i); }
 template<class T> T offbit(T s, int i) { return s & (~(T(1) << i)); }
-template<class T> int cntbit(T s) { return s == 0 ? 0 : cntbit(s >> 1) + (s & 1); } //number of bit 1
-template<class T> int disp(T s) { Rep(i,sz(s)) cout << s[i] << " "; cout << el; }
-template<class T> int disp(T s,int n) { For(i,1,n) cout << s[i] << " "; cout << el; }
+template<class T> int cntbit(T s) { return s == 0 ? 0 : cntbit(s >> 1) + (s & 1); }
+
 const ld PI = acos(-1.0);
 const ld eps = 1e-9;
 const int dr[] = {-1, 0, +1, 0};
@@ -58,34 +58,81 @@ const int dc[] = {0, +1, 0, -1};
 const int inf = (int)1e9 + 5;
 const ll linf = (ll)1e16 + 5;
 const ll mod = (ll)1e9 + 7;
-const int MX = 1e5 + 7;
-const int MAX = 15 + 7;
+void disp(vector<int> v){
+    int nv = v.size(), nn = min(nv, 15);
+    For(i,0,nn - 1) cout << v[i] << " ";
+    cout << el;
+}
+template <typename T> vector<T> readVector(int n) { vector<T> res(n); for (int i = 0 ; i < n ; i++) cin >> res[i]; return res; }
 
-// paste source code========================================================
+// z-function implementation taken from e-maxx.ru   O(n)
+/*
+Suppose we are given a string s of length n. The Z-function for this string is an array of length n where the i-th element is equal to the greatest number of characters starting from the position i that coincide with the first characters of s.
+In other words, z[i] is the length of the longest common prefix between s and the suffix of s starting at i.
+*/
 
+vector<int> zFunction(vector<int> &s) {
+    int n = (int) s.size();
+    vector<int> z (n);
+    for (int i=1, l=0, r=0; i<n; ++i) {
+        if (i <= r)
+            z[i] = min (r-i+1, z[i-l]);
+        while (i+z[i] < n && s[z[i]] == s[i+z[i]])
+            ++z[i];
+        if (i+z[i]-1 > r)
+            l = i,  r = i+z[i]-1;
+    }
+    return z;
+}
+//------------------------------------------------------------------------------------------------------
+int findNumberOfOccurences(vector<int> &v, vector<int> &pattern) {
+    if (pattern.size() == 0) return v.size() + 1;
 
-// declare ========================================================
+    vector<int> str = pattern;
+    str.insert(str.end(), v.begin(), v.end());
+    vector<int> z = zFunction(str);
 
+    int result = 0;
 
-// create function========================================================
+    for (int i = pattern.size() ; i < z.size() ; i++) {
+        if (z[i] >= pattern.size()) result++;
+    }
 
+    return result;
+}
+
+vector<int> toDiffArray(vector<int> &v) {
+    vector<int> result;
+    for (int i = 1 ; i < v.size() ; i++)
+        result.push_back(v[i] - v[i - 1]);
+    return result;
+}
 int sol(){
+    //initialize array, vector, .....
+    int n; cin >> n;
+    int m; cin >> m;
 
+    vector<int> a = readVector<int>(n);
+    vector<int> b = readVector<int>(m);
+
+    vector<int> aDiff = toDiffArray(a);
+    vector<int> bDiff = toDiffArray(b);
+
+    int result = findNumberOfOccurences(aDiff, bDiff);
+
+    cout << result;
 
 
 }
-
 int main(){
-
 	#ifndef ONLINE_JUDGE
 	freopen("in.txt", "r", stdin);
-//	freopen("out.txt", "w", stdout);
-
-	#endif
+	//freopen("out.txt", "w", stdout);
+	#endif // ONLINE_JUDGE
 	std::ios::sync_with_stdio(false);
-	cin.tie(NULL);
+    int xtest = 1;
+    while(xtest--){        sol();     }
 
-    sol();
 
     return 0;
 }

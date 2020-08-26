@@ -1,4 +1,5 @@
 #include <bits/stdc++.h>
+
 using namespace std;
 
 typedef long long ll;
@@ -9,6 +10,7 @@ typedef pair<int, int> ii;
 typedef vector<ii> vii;
 typedef vector<int> vi;
 typedef vector<vi> vvi;
+typedef vector<bool> vb;
 typedef vector<double> vd;
 typedef vector<string> vs;
 
@@ -38,7 +40,6 @@ typedef vector<string> vs;
 #define Enum(a) Fit(it, (a)) cout << *it << " "; cout << endl;
 #define el '\n'
 #define coud(a,b) cout<<fixed << setprecision((b)) << (a)
-#define debug(x) { cout << #x << " = "; cout << (x) << endl; }
 
 template<class F, class T> T convert(F a, int p = -1) { stringstream ss; if (p >= 0) ss << fixed << setprecision(p); ss << a; T r; ss >> r; return r; }
 template<class T> T gcd(T a, T b){ T r; while (b != 0) { r = a % b; a = b; b = r; } return a;}
@@ -48,9 +49,8 @@ template<class T> T cube(T x) { return x * x * x; }
 template<class T> int getbit(T s, int i) { return (s >> i) & 1; }
 template<class T> T onbit(T s, int i) { return s | (T(1) << i); }
 template<class T> T offbit(T s, int i) { return s & (~(T(1) << i)); }
-template<class T> int cntbit(T s) { return s == 0 ? 0 : cntbit(s >> 1) + (s & 1); } //number of bit 1
-template<class T> int disp(T s) { Rep(i,sz(s)) cout << s[i] << " "; cout << el; }
-template<class T> int disp(T s,int n) { For(i,1,n) cout << s[i] << " "; cout << el; }
+template<class T> int cntbit(T s) { return s == 0 ? 0 : cntbit(s >> 1) + (s & 1); }
+
 const ld PI = acos(-1.0);
 const ld eps = 1e-9;
 const int dr[] = {-1, 0, +1, 0};
@@ -58,34 +58,66 @@ const int dc[] = {0, +1, 0, -1};
 const int inf = (int)1e9 + 5;
 const ll linf = (ll)1e16 + 5;
 const ll mod = (ll)1e9 + 7;
-const int MX = 1e5 + 7;
-const int MAX = 15 + 7;
 
-// paste source code========================================================
+const ll maxGT = (ll) 1e6 + 15;
+ll gt[maxGT], GT[maxGT];
+
+ll powk(ll n, ll k) {
+    if(k == 0ll) return 1 % mod;
+    if(k == 1ll) return n % mod;
+    if(k % 2 == 0){
+        ll ans = powk(n, k/2);
+        return (ans * ans) % mod;
+    }
+    return (n * powk(n, k - 1)) % mod;
+}
+void setGT(){
+    gt[0] = 1ll;
+    For(i,1,maxGT-5){
+        gt[i] = (gt[i-1] * i) % mod;
+    }
+    For(i,0,maxGT-5){
+        GT[i] = powk(gt[i], mod - 2);
+    }
+}
+ll C(ll n, ll k){
+    if(n < k) return 0;
+    ll ans = (gt[n] * GT[k]) % mod;
+    return (ans * GT[n-k]) % mod;
+}
 
 
-// declare ========================================================
 
 
-// create function========================================================
+const int maxC = 50;
+ll C[maxC + 5][maxC + 5];
+void setC(){
+    C[0][0] = 1ll;
+    For(n,1,maxC){
+        For(k,0,n) C[n][k] = C[n-1][k] + C[n-1][k-1];
+    }
+}
+int sol(int test){
 
-int sol(){
-
-
+    printf("Case %d: \n",test);
 
 }
 
 int main(){
+	//freopen("in.txt", "r", stdin);
+	//freopen("out.txt", "w", stdout);
+//	std::ios::sync_with_stdio(false);
+//	cin.tie(NULL);
+    //setGT();
+    //cout << C(3, 1) << el;
+    setC();
+    cout << C[0][0] << el;
+    cout << C[3][1] << el;
+    cout << C[50][25] << el;
 
-	#ifndef ONLINE_JUDGE
-	freopen("in.txt", "r", stdin);
-//	freopen("out.txt", "w", stdout);
-
-	#endif
-	std::ios::sync_with_stdio(false);
-	cin.tie(NULL);
-
-    sol();
-
-    return 0;
+//	int nTest;
+//	scanf("%d",&nTest);
+//    For(test,1,nTest){
+//        sol(test);
+//    }
 }
